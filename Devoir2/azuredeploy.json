@@ -12,7 +12,7 @@
       "type": "String"
     },
     "kind": {
-      "type": "String"
+      "type": "String" 
     },
     "minimumTlsVersion": {
       "type": "String"
