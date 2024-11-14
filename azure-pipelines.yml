@@ -18,6 +18,6 @@ steps:
     resourceGroupName: 'RessourceGroup2'
     location: 'East US'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)\Storage\Devoir2\azuredeploy.json'
-    csmParametersFile: '$(Build.SourcesDirectory)\Storage\Devoir2\azuredeploy.parameters.json'
+    csmFile: '$(Build.SourcesDirectory)\Devoir2\azuredeploy.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\Devoir2\azuredeploy.parameters.json'
     deploymentMode: 'Validation'
