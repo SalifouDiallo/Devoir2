@@ -1,10 +1,72 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "storageAccounts_comptedevoir2_name": {
-      "defaultValue": "comptedevoir2",
+    "location": {
       "type": "String"
+    },
+    "storageAccountName": {
+      "type": "String"
+    },
+    "accountType": {
+      "type": "String"
+    },
+    "kind": {
+      "type": "String"
+    },
+    "minimumTlsVersion": {
+      "type": "String"
+    },
+    "supportsHttpsTrafficOnly": {
+      "type": "Bool"
+    },
+    "allowBlobPublicAccess": {
+      "type": "Bool"
+    },
+    "allowSharedKeyAccess": {
+      "type": "Bool"
+    },
+    "defaultOAuth": {
+      "type": "Bool"
+    },
+    "accessTier": {
+      "type": "String"
+    },
+    "publicNetworkAccess": {
+      "type": "String"
+    },
+    "allowCrossTenantReplication": {
+      "type": "Bool"
+    },
+    "networkAclsBypass": {
+      "type": "String"
+    },
+    "networkAclsDefaultAction": {
+      "type": "String"
+    },
+    "networkAclsIpRules": {
+      "type": "Array"
+    },
+    "dnsEndpointType": {
+      "type": "String"
+    },
+    "largeFileSharesState": {
+      "type": "String"
+    },
+    "keySource": {
+      "type": "String"
+    },
+    "encryptionEnabled": {
+      "type": "Bool"
+    },
+    "keyTypeForTableAndQueueEncryption": {
+      "type": "String"
+    },
+    "infrastructureEncryptionEnabled": {
+      "type": "Bool"
+    },
+    "isShareSoftDeleteEnabled": {
+      "type": "Bool"
     }
   },
   "variables": {},
@@ -12,116 +74,64 @@
     {
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2023-05-01",
-      "name": "[parameters('storageAccounts_comptedevoir2_name')]",
-      "location": "canadacentral",
+      "name": "[parameters('storageAccountName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [],
+      "tags": {},
       "sku": {
-        "name": "Standard_LRS",
-        "tier": "Standard"
+        "name": "[parameters('accountType')]"
       },
-      "kind": "StorageV2",
+      "kind": "[parameters('kind')]",
       "properties": {
-        "dnsEndpointType": "Standard",
-        "defaultToOAuthAuthentication": false,
-        "publicNetworkAccess": "Enabled",
-        "allowCrossTenantReplication": false,
-        "minimumTlsVersion": "TLS1_2",
-        "allowBlobPublicAccess": true,
-        "allowSharedKeyAccess": true,
-        "largeFileSharesState": "Enabled",
+        "minimumTlsVersion": "[parameters('minimumTlsVersion')]",
+        "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
+        "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]",
+        "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]",
+        "defaultToOAuthAuthentication": "[parameters('defaultOAuth')]",
+        "accessTier": "[parameters('accessTier')]",
+        "publicNetworkAccess": "[parameters('publicNetworkAccess')]",
+        "allowCrossTenantReplication": "[parameters('allowCrossTenantReplication')]",
         "networkAcls": {
-          "bypass": "AzureServices",
-          "virtualNetworkRules": [],
-          "ipRules": [],
-          "defaultAction": "Allow"
+          "bypass": "[parameters('networkAclsBypass')]",
+          "defaultAction": "[parameters('networkAclsDefaultAction')]",
+          "ipRules": "[parameters('networkAclsIpRules')]"
         },
-        "supportsHttpsTrafficOnly": true,
+        "dnsEndpointType": "[parameters('dnsEndpointType')]",
+        "largeFileSharesState": "[parameters('largeFileSharesState')]",
         "encryption": {
-          "requireInfrastructureEncryption": false,
+          "keySource": "[parameters('keySource')]",
           "services": {
-            "file": {
-              "keyType": "Account",
-              "enabled": true
-            },
             "blob": {
-              "keyType": "Account",
-              "enabled": true
+              "enabled": "[parameters('encryptionEnabled')]"
+            },
+            "file": {
+              "enabled": "[parameters('encryptionEnabled')]"
+            },
+            "table": {
+              "enabled": "[parameters('encryptionEnabled')]"
+            },
+            "queue": {
+              "enabled": "[parameters('encryptionEnabled')]"
             }
           },
-          "keySource": "Microsoft.Storage"
-        },
-        "accessTier": "Hot"
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts/blobServices",
-      "apiVersion": "2023-05-01",
-      "name": "[concat(parameters('storageAccounts_comptedevoir2_name'), '/default')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_comptedevoir2_name'))]"
-      ],
-      "sku": {
-        "name": "Standard_LRS",
-        "tier": "Standard"
-      },
-      "properties": {
-        "cors": {
-          "corsRules": []
-        },
-        "deleteRetentionPolicy": {
-          "allowPermanentDelete": false,
-          "enabled": false
+          "requireInfrastructureEncryption": "[parameters('infrastructureEncryptionEnabled')]"
         }
       }
     },
     {
-      "type": "Microsoft.Storage/storageAccounts/fileServices",
+      "type": "Microsoft.Storage/storageAccounts/fileservices",
       "apiVersion": "2023-05-01",
-      "name": "[concat(parameters('storageAccounts_comptedevoir2_name'), '/default')]",
+      "name": "[concat(parameters('storageAccountName'), '/default')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_comptedevoir2_name'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
       ],
-      "sku": {
-        "name": "Standard_LRS",
-        "tier": "Standard"
-      },
       "properties": {
-        "protocolSettings": {
-          "smb": {}
-        },
-        "cors": {
-          "corsRules": []
-        },
+        "protocolSettings": null,
         "shareDeleteRetentionPolicy": {
-          "enabled": false,
-          "days": 0
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts/queueServices",
-      "apiVersion": "2023-05-01",
-      "name": "[concat(parameters('storageAccounts_comptedevoir2_name'), '/default')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_comptedevoir2_name'))]"
-      ],
-      "properties": {
-        "cors": {
-          "corsRules": []
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts/tableServices",
-      "apiVersion": "2023-05-01",
-      "name": "[concat(parameters('storageAccounts_comptedevoir2_name'), '/default')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_comptedevoir2_name'))]"
-      ],
-      "properties": {
-        "cors": {
-          "corsRules": []
+          "enabled": "[parameters('isShareSoftDeleteEnabled')]"
         }
       }
     }
-  ]
+  ],
+  "outputs": {}
 }
