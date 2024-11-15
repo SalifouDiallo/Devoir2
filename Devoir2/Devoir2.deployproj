@@ -29,6 +29,9 @@
       <Visible>False</Visible>
     </None>
     <Content Include="Deploy-AzureResourceGroup.ps1" />
+    <None Include="fonctionApp\azuredeploy.json" />
+    <None Include="fonctionApp\azuredeploy.parameters.json" />
+    <None Include="fonctionApp\Deploy-AzureResourceGroup.ps1" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>
