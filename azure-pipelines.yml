@@ -21,3 +21,15 @@ steps:
     csmFile: '$(Build.SourcesDirectory)\Devoir2\azuredeploy.json'
     csmParametersFile: '$(Build.SourcesDirectory)\Devoir2\azuredeploy.parameters.json'
     deploymentMode: 'Validation'
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Abonnement Azure PAYG(1)(0673c009-6d00-4254-9178-35fed48c87be)'
+    subscriptionId: '0673c009-6d00-4254-9178-35fed48c87be'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'RessourceGroup2'
+    location: 'East US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)\Devoir2\azuredeploy.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\Devoir2\azuredeploy.parameters.json'
+    deploymentMode: 'Validation'
