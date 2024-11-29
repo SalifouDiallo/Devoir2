@@ -16,7 +16,7 @@
     },
     "use32BitWorkerProcess": {
       "type": "Bool"
-    },
+    }, 
     "ftpsState": {
       "type": "String"
     },
